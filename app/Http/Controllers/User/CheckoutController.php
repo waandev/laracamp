@@ -4,10 +4,12 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Checkout\Store;
+use App\Mail\Checkout\AfterCheckout;
 use App\Models\Camp;
 use App\Models\Checkout;
 use Illuminate\Http\Request;
 use Auth;
+use Mail;
 
 class CheckoutController extends Controller
 {
@@ -59,6 +61,9 @@ class CheckoutController extends Controller
 
         // create checkout
         $checkout = Checkout::create($data);
+
+        // sending email
+        Mail::to(Auth::user()->email)->send(new AfterCheckout($checkout));
 
         return redirect(route('checkout.success'));
     }
