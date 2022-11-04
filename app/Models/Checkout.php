@@ -17,6 +17,9 @@ class Checkout extends Model
         'payment_status',
         'midtrans_url',
         'midtrans_booking_code',
+        'discount_id',
+        'discount_percentage',
+        'total'
     ];
 
     public function setExpiredAttribute($value)
