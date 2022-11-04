@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Discount\Store;
+use App\Http\Requests\Admin\Discount\Update;
 use App\Models\Discount;
 use Illuminate\Http\Request;
 
@@ -64,7 +65,9 @@ class DiscountController extends Controller
      */
     public function edit(Discount $discount)
     {
-        //
+        return view('admin.discount.edit', [
+            'discount' => $discount
+        ]);
     }
 
     /**
@@ -74,9 +77,11 @@ class DiscountController extends Controller
      * @param  \App\Models\Discount  $discount
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Discount $discount)
+    public function update(Update $request, Discount $discount)
     {
-        //
+        $discount->update($request->all());
+        $request->session()->flash('success', "Discount {$discount->name} has been updated");
+        return redirect(route('admin.discount.index'));
     }
 
     /**
@@ -85,8 +90,10 @@ class DiscountController extends Controller
      * @param  \App\Models\Discount  $discount
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Discount $discount)
+    public function destroy(Request $request, Discount $discount)
     {
-        //
+        $discount->delete();
+        $request->session()->flash('error', "Discount {$discount->name} has been deleted");
+        return redirect(route('admin.discount.index'));
     }
 }
