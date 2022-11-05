@@ -7,6 +7,7 @@ use App\Http\Requests\User\Checkout\Store;
 use App\Mail\Checkout\AfterCheckout;
 use App\Models\Camp;
 use App\Models\Checkout;
+use App\Models\Discount;
 use Illuminate\Http\Request;
 use Auth;
 use Exception;
@@ -61,7 +62,6 @@ class CheckoutController extends Controller
     {
         // mapping request data
         $data = $request->all();
-        return $data;
         $data['user_id'] = Auth::id();
         $data['camp_id'] = $camp->id;
 
@@ -73,6 +73,13 @@ class CheckoutController extends Controller
         $user->phone = $data['phone'];
         $user->address = $data['address'];
         $user->save();
+
+        // create discount
+        if ($request->discount) {
+            $discount = Discount::whereCode($request->discount)->first();
+            $data['discount_id'] = $discount->id;
+            $data['discount_percentage'] = $discount->percentage;
+        }
 
         // create checkout
         $checkout = Checkout::create($data);
